@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rikket Consulting — Strategic Excellence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy:      #0D1B2A;
+      --navy-2:    #1B2A3B;
+      --gold:      #C8A951;
+      --gold-light:#E2C97E;
+      --cream:     #F7F4EE;
+      --cream-2:   #EDE9E0;
+      --charcoal:  #2C3A47;
+      --muted:     #7A8694;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--cream);
+      color: var(--navy);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Typography ── */
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; }
+
+    /* ── Scroll animations ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(0.34, 1.36, 0.64, 1),
+                  transform 0.75s cubic-bezier(0.34, 1.36, 0.64, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(13, 27, 42, 0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.375rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy) !important;
+      padding: 0.55rem 1.4rem !important;
+      border-radius: 2px;
+      font-weight: 600 !important;
+      letter-spacing: 0.06em;
+      transition: background 0.2s ease, transform 0.15s ease !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+    .nav-cta:active { transform: translateY(0); }
+
+    /* ── Hero ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--navy);
+    }
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 30%, rgba(200,169,81,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 15% 85%, rgba(27,42,59,0.9) 0%, transparent 55%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #0D1B2A 0%, #0a1520 100%);
+    }
+    .hero-lines {
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+      background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 79px, rgba(255,255,255,0.5) 80px
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      padding-top: 72px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .hero-h1 {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #fff;
+      max-width: 800px;
+      margin-bottom: 1.75rem;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.6);
+      max-width: 540px;
+      margin-bottom: 3rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(200,169,81,0.35), 0 2px 8px rgba(200,169,81,0.2);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.2s ease,
+                  background 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 48px rgba(200,169,81,0.4), 0 4px 16px rgba(200,169,81,0.25);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.6); }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 5rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hero-stat-num span { color: var(--gold); }
+    .hero-stat-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.4rem;
+    }
+
+    /* ── Section commons ── */
+    section { padding: 7rem 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .section-h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--navy);
+    }
+    .section-h2 em { font-style: italic; color: var(--charcoal); }
+    .section-lead {
+      font-size: 1.0625rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+      margin-top: 1.25rem;
+    }
+
+    /* ── Services ── */
+    #services { background: var(--cream); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5px;
+      margin-top: 4rem;
+      background: var(--cream-2);
+      border: 1.5px solid var(--cream-2);
+    }
+    .service-card {
+      background: var(--cream);
+      padding: 2.75rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.34, 1.36, 0.64, 1);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: #fff; }
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(200,169,81,0.1);
+      border: 1px solid rgba(200,169,81,0.25);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .service-card:hover .service-icon {
+      background: rgba(200,169,81,0.18);
+      border-color: rgba(200,169,81,0.5);
+    }
+    .service-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; }
+    .service-num {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.04);
+      line-height: 1;
+      user-select: none;
+    }
+    .service-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+    .service-desc {
+      font-size: 0.9375rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      transition: gap 0.2s ease;
+    }
+    .service-link:hover { gap: 0.65rem; }
+
+    /* ── About / Why Us ── */
+    #about {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+    #about::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 90% 20%, rgba(200,169,81,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 10% 90%, rgba(27,42,59,0.6) 0%, transparent 50%);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .about-image-wrap {
+      position: relative;
+    }
+    .about-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+    .about-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,27,42,0.6) 0%, transparent 50%);
+      border-radius: 4px;
+    }
+    .about-img-tag {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border-radius: 2px;
+    }
+    .about-content .section-h2 { color: #fff; }
+    .about-content .section-h2 em { color: var(--gold-light); }
+    .about-body {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      margin-top: 1.5rem;
+    }
+    .about-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .about-feature {
+      display: flex;
+      gap: 0.875rem;
+      align-items: flex-start;
+    }
+    .about-feature-dot {
+      width: 6px;
+      height: 6px;
+      min-width: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-top: 0.55rem;
+    }
+    .about-feature-text {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.55;
+    }
+    .about-feature-title {
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* ── Process ── */
+    #process { background: var(--cream-2); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 4rem;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 2rem;
+      left: calc(12.5% + 1.5rem);
+      right: calc(12.5% + 1.5rem);
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), rgba(200,169,81,0.3), var(--gold));
+    }
+    .process-step {
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .process-step-num {
+      width: 4rem;
+      height: 4rem;
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.75rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background 0.25s ease;
+    }
+    .process-step:hover .process-step-num {
+      transform: scale(1.1);
+      background: var(--gold);
+      color: var(--navy);
+    }
+    .process-step-title {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+    .process-step-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── Testimonials ── */
+    #testimonials { background: var(--cream); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+    .testimonial-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 6px;
+      padding: 2.25rem;
+      position: relative;
+      box-shadow:
+        0 2px 4px rgba(13,27,42,0.04),
+        0 8px 24px rgba(13,27,42,0.06);
+      transition: transform 0.25s cubic-bezier(0.34, 1.36, 0.64, 1),
+                  box-shadow 0.25s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 4px 8px rgba(13,27,42,0.06),
+        0 16px 40px rgba(13,27,42,0.1);
+    }
+    .testimonial-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--gold);
+      opacity: 0.4;
+      margin-bottom: 1.25rem;
+    }
+    .testimonial-text {
+      font-size: 0.9375rem;
+      color: var(--charcoal);
+      line-height: 1.75;
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--cream-2);
+    }
+    .testimonial-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .testimonial-role {
+      font-size: 0.775rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+    .stars { color: var(--gold); font-size: 0.9rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+    /* ── CTA ── */
+    #cta {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 7rem 2rem;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 100% at 50% 50%, rgba(200,169,81,0.1) 0%, transparent 65%),
+        radial-gradient(ellipse 100% 60% at 50% 100%, rgba(200,169,81,0.05) 0%, transparent 60%);
+    }
+    .cta-inner { position: relative; z-index: 2; max-width: 680px; margin: 0 auto; }
+    .cta-h2 {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+    .cta-h2 em { font-style: italic; color: var(--gold-light); }
+    .cta-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.75;
+      margin-bottom: 2.75rem;
+    }
+    .btn-primary-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 1.2rem 2.75rem;
+      border-radius: 2px;
+      text-decoration: none;
+      box-shadow: 0 8px 40px rgba(200,169,81,0.4);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.2s ease,
+                  background 0.2s ease;
+    }
+    .btn-primary-large:hover {
+      background: var(--gold-light);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 56px rgba(200,169,81,0.5);
+    }
+    .btn-primary-large:active { transform: translateY(0); }
+    .cta-note {
+      margin-top: 1.5rem;
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: #080f18;
+      padding: 4rem 2rem 2.5rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .footer-brand-name span { color: var(--gold); }
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+    .footer-col-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.25rem;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-links a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.2);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+      .about-image-wrap { max-width: 480px; }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .process-steps {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+      }
+      .process-steps::before { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 5rem 1.25rem; }
+      .process-steps { grid-template-columns: 1fr; }
+      .about-features { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVIGATION ══ -->
+  <nav id="navbar">
+    <div class="nav-logo">Rikket<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#testimonials">Clients</a></li>
+      <li><a href="#cta" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section id="hero">
+    <div class="hero-gradient"></div>
+
+    <!-- Animated Grid Pattern (matches AnimatedGridPattern component behavior) -->
+    <svg
+      id="animated-grid"
+      aria-hidden="true"
+      style="
+        position: absolute;
+        pointer-events: none;
+        left: 0; right: 0;
+        top: -30%; bottom: -30%;
+        height: 200%;
+        width: 100%;
+        color: rgba(200,169,81,0.18);
+        transform: skewY(12deg);
+        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, white 20%, transparent 80%);
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, white 20%, transparent 80%);
+        z-index: 1;
+      "
+    ></svg>
+
+    <div class="hero-content container">
+      <div class="hero-eyebrow reveal">Strategic Consultancy</div>
+      <h1 class="hero-h1 reveal reveal-delay-1">
+        Turning complex<br />challenges into<br /><em>decisive results.</em>
+      </h1>
+      <p class="hero-sub reveal reveal-delay-2">
+        We partner with ambitious organisations to unlock growth, sharpen strategy,
+        and build the capabilities that compound over time.
+      </p>
+      <div class="hero-actions reveal reveal-delay-3">
+        <a href="#cta" class="btn-primary">
+          Start a Conversation
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#services" class="btn-ghost">
+          Our Services
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-stats reveal reveal-delay-4">
+        <div>
+          <div class="hero-stat-num">18<span>+</span></div>
+          <div class="hero-stat-label">Years in Practice</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">240<span>+</span></div>
+          <div class="hero-stat-label">Engagements Delivered</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">94<span>%</span></div>
+          <div class="hero-stat-label">Client Retention Rate</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">32<span>+</span></div>
+          <div class="hero-stat-label">Countries Served</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SERVICES ══ -->
+  <section id="services">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-eyebrow">What We Do</div>
+        <h2 class="section-h2">Services built around<br /><em>your ambition</em></h2>
+        <p class="section-lead">
+          From strategy formulation to operational execution, our expertise spans the full arc of organisational transformation.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <!-- Card 1 -->
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-num">01</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M2 20h20M6 20V10l6-6 6 6v10"/><path d="M10 20v-6h4v6"/></svg>
+          </div>
+          <div class="service-title">Corporate Strategy</div>
+          <p class="service-desc">We help leadership teams build robust, evidence-based strategies that create durable competitive advantage and align the entire organisation.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+        <!-- Card 2 -->
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-num">02</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3"/><path d="M7.05 7.05l2.12 2.12M14.83 14.83l2.12 2.12M7.05 16.95l2.12-2.12M14.83 9.17l2.12-2.12"/></svg>
+          </div>
+          <div class="service-title">Organisational Design</div>
+          <p class="service-desc">We redesign operating models, governance structures, and team architectures to eliminate friction and unlock your organisation's full potential.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+        <!-- Card 3 -->
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-num">03</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="service-title">Market Expansion</div>
+          <p class="service-desc">From market entry analysis to go-to-market design, we give you the confidence and roadmap to enter new markets with precision.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+        <!-- Card 4 -->
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-num">04</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="service-title">Financial Advisory</div>
+          <p class="service-desc">We support capital allocation decisions, M&A due diligence, and financial modelling that drives value creation at every stage of the business lifecycle.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+        <!-- Card 5 -->
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-num">05</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="service-title">Leadership Development</div>
+          <p class="service-desc">We design executive coaching programmes and leadership frameworks that build the next generation of decision-makers within your organisation.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+        <!-- Card 6 -->
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-num">06</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="service-title">Performance Transformation</div>
+          <p class="service-desc">We diagnose operational bottlenecks, redesign core processes, and implement change management frameworks that deliver measurable results fast.</p>
+          <a href="#cta" class="service-link">Learn more →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-wrap reveal">
+          <img
+            src="https://placehold.co/560x740/1B2A3B/C8A951?text=+&font=playfair-display"
+            alt="Consultancy team"
+            class="about-img"
+          />
+          <div class="about-img-overlay"></div>
+          <div class="about-img-tag">Since 2006</div>
+        </div>
+        <div class="about-content">
+          <div class="section-eyebrow reveal">Who We Are</div>
+          <h2 class="section-h2 reveal reveal-delay-1">Independent thinking.<br /><em>Proven outcomes.</em></h2>
+          <p class="about-body reveal reveal-delay-2">
+            Rikket Consulting was founded on a simple belief: that the best advice comes from people with genuine skin in the game. We are a boutique firm — deliberately so — ensuring every partner is deeply engaged in every engagement.
+          </p>
+          <p class="about-body reveal reveal-delay-2" style="margin-top:1rem;">
+            Our team combines decades of in-house executive experience with the rigour of top-tier consulting, giving clients both strategic clarity and implementation muscle.
+          </p>
+          <div class="about-features reveal reveal-delay-3">
+            <div class="about-feature">
+              <div class="about-feature-dot"></div>
+              <div>
+                <div class="about-feature-title">Boutique Rigour</div>
+                <div class="about-feature-text">Senior-led engagements. No juniors, no off-shoring.</div>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="about-feature-dot"></div>
+              <div>
+                <div class="about-feature-title">Sector Depth</div>
+                <div class="about-feature-text">Deep expertise across FS, Industrials & Technology.</div>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="about-feature-dot"></div>
+              <div>
+                <div class="about-feature-title">Outcome Aligned</div>
+                <div class="about-feature-text">We share accountability for the results we recommend.</div>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="about-feature-dot"></div>
+              <div>
+                <div class="about-feature-title">Global Reach</div>
+                <div class="about-feature-text">Local knowledge. International network. No borders.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROCESS ══ -->
+  <section id="process">
+    <div class="container">
+      <div style="text-align:center;" class="reveal">
+        <div class="section-eyebrow" style="justify-content:center;">How We Work</div>
+        <h2 class="section-h2" style="max-width:520px;margin:0 auto;">A clear path from<br /><em>insight to impact</em></h2>
+      </div>
+      <div class="process-steps">
+        <div class="process-step reveal reveal-delay-1">
+          <div class="process-step-num">I</div>
+          <div class="process-step-title">Discover</div>
+          <p class="process-step-desc">We conduct deep diagnostics — interviews, data analysis, benchmarking — to understand your organisation completely.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <div class="process-step-num">II</div>
+          <div class="process-step-title">Define</div>
+          <p class="process-step-desc">We co-create a clear strategy and prioritised action plan, aligned with your goals and grounded in evidence.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <div class="process-step-num">III</div>
+          <div class="process-step-title">Deliver</div>
+          <p class="process-step-desc">We work shoulder-to-shoulder with your team to implement change, not just advise on it.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-4">
+          <div class="process-step-num">IV</div>
+          <div class="process-step-title">Sustain</div>
+          <p class="process-step-desc">We embed capability within your organisation so results compound long after our engagement ends.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TESTIMONIALS ══ -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-eyebrow">Client Voices</div>
+        <h2 class="section-h2">Results that<br /><em>speak for themselves</em></h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="stars">★★★★★</div>
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">Rikket didn't just hand us a deck — they helped us build an entirely new way of thinking about our market. Twelve months on, revenue is up 38%.</p>
+          <div class="testimonial-author">
+            <img src="https://placehold.co/88x88/EDE9E0/2C3A47?text=SJ" alt="Sarah J." class="testimonial-avatar" />
+            <div>
+              <div class="testimonial-name">Sarah Jensen</div>
+              <div class="testimonial-role">CEO, Meridian Capital Group</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="stars">★★★★★</div>
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">The organisational redesign they led transformed our speed to market. What used to take six months now takes six weeks. Exceptional.</p>
+          <div class="testimonial-author">
+            <img src="https://placehold.co/88x88/EDE9E0/2C3A47?text=TM" alt="Thomas M." class="testimonial-avatar" />
+            <div>
+              <div class="testimonial-name">Thomas Müller</div>
+              <div class="testimonial-role">COO, Nexara Industrials</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-3">
+          <div class="stars">★★★★★</div>
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">Having Rikket in our corner during the merger was invaluable. Their rigour, candour, and speed were unlike anything I've seen from a consultancy before.</p>
+          <div class="testimonial-author">
+            <img src="https://placehold.co/88x88/EDE9E0/2C3A47?text=AL" alt="Amara L." class="testimonial-avatar" />
+            <div>
+              <div class="testimonial-name">Amara Lindqvist</div>
+              <div class="testimonial-role">CFO, Arcos Technologies</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logos row -->
+      <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(0,0,0,0.07);">
+        <p style="font-size:0.7rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;">Trusted by leading organisations</p>
+        <div style="display:flex;justify-content:center;align-items:center;gap:3.5rem;flex-wrap:wrap;opacity:0.4;">
+          <img src="https://placehold.co/120x36/7A8694/ffffff?text=Meridian" alt="Meridian" style="height:28px;border-radius:2px;" />
+          <img src="https://placehold.co/100x36/7A8694/ffffff?text=Nexara" alt="Nexara" style="height:28px;border-radius:2px;" />
+          <img src="https://placehold.co/110x36/7A8694/ffffff?text=Arcos" alt="Arcos" style="height:28px;border-radius:2px;" />
+          <img src="https://placehold.co/130x36/7A8694/ffffff?text=Vantage" alt="Vantage" style="height:28px;border-radius:2px;" />
+          <img src="https://placehold.co/115x36/7A8694/ffffff?text=Orbis" alt="Orbis" style="height:28px;border-radius:2px;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section id="cta">
+    <div class="cta-inner reveal">
+      <div class="section-eyebrow" style="justify-content:center;color:var(--gold-light);">Let's Talk</div>
+      <h2 class="cta-h2">Ready to make your<br />next move <em>count?</em></h2>
+      <p class="cta-sub">
+        Whether you're navigating a transformation, entering a new market, or building for the next decade —
+        let's start with an honest conversation.
+      </p>
+      <a href="mailto:hello@rikket.com" class="btn-primary-large">
+        Book a Discovery Call
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <p class="cta-note">No commitment. No sales pressure. Just a conversation.</p>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand-name">Rikket<span>.</span></div>
+          <p class="footer-tagline">
+            A boutique strategy and transformation consultancy partnering with ambitious organisations worldwide.
+          </p>
+        </div>
+        <div>
+          <div class="footer-col-title">Services</div>
+          <ul class="footer-links">
+            <li><a href="#services">Corporate Strategy</a></li>
+            <li><a href="#services">Organisational Design</a></li>
+            <li><a href="#services">Market Expansion</a></li>
+            <li><a href="#services">Financial Advisory</a></li>
+            <li><a href="#services">Leadership Development</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Firm</div>
+          <ul class="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#process">Our Process</a></li>
+            <li><a href="#testimonials">Client Stories</a></li>
+            <li><a href="#cta">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Contact</div>
+          <ul class="footer-links">
+            <li><a href="mailto:hello@rikket.com">hello@rikket.com</a></li>
+            <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+            <li><a href="#">London · New York</a></li>
+            <li><a href="#">Singapore · Dubai</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Rikket Consulting Ltd. All rights reserved.</span>
+        <span>Privacy Policy · Terms of Service</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Nav scroll effect ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Animated Grid Pattern ──────────────────────────────────────────────
+    // Replicates AnimatedGridPattern component (numSquares=30, maxOpacity=0.1,
+    // duration=3s, repeatDelay=1s) in vanilla JS/SVG
+    (function () {
+      const NS      = 'http://www.w3.org/2000/svg';
+      const svg     = document.getElementById('animated-grid');
+      const CELL_W  = 40;
+      const CELL_H  = 40;
+      const NUM_SQ  = 30;
+      const MAX_OP  = 0.1;
+      const DURATION = 3000;   // ms
+      const REPEAT_DELAY = 1000; // ms
+      const OFFSET_X = -1;
+      const OFFSET_Y = -1;
+
+      let dims = { w: 0, h: 0 };
+      let patternId = 'agp-' + Math.random().toString(36).slice(2, 8);
+      let initialized = false;
+
+      function cols() { return Math.ceil(dims.w / CELL_W) + 2; }
+      function rows() { return Math.ceil(dims.h / CELL_H) + 2; }
+
+      function randPos() {
+        return [
+          Math.floor(Math.random() * cols()),
+          Math.floor(Math.random() * rows()),
+        ];
+      }
+
+      function build() {
+        svg.innerHTML = '';
+
+        // ── defs: grid line pattern ──
+        const defs    = document.createElementNS(NS, 'defs');
+        const pattern = document.createElementNS(NS, 'pattern');
+        pattern.setAttribute('id',              patternId);
+        pattern.setAttribute('width',           CELL_W);
+        pattern.setAttribute('height',          CELL_H);
+        pattern.setAttribute('patternUnits',    'userSpaceOnUse');
+        pattern.setAttribute('x',               OFFSET_X);
+        pattern.setAttribute('y',               OFFSET_Y);
+
+        const linePath = document.createElementNS(NS, 'path');
+        linePath.setAttribute('d',    `M.5 ${CELL_H}V.5H${CELL_W}`);
+        linePath.setAttribute('fill', 'none');
+        linePath.setAttribute('stroke', 'currentColor');
+        linePath.setAttribute('stroke-dasharray', '0');
+        pattern.appendChild(linePath);
+        defs.appendChild(pattern);
+        svg.appendChild(defs);
+
+        // ── background rect (grid lines) ──
+        const bg = document.createElementNS(NS, 'rect');
+        bg.setAttribute('width',  '100%');
+        bg.setAttribute('height', '100%');
+        bg.setAttribute('fill',   `url(#${patternId})`);
+        svg.appendChild(bg);
+
+        // ── squares group ──
+        const grp = document.createElementNS(NS, 'svg');
+        grp.setAttribute('x',        OFFSET_X);
+        grp.setAttribute('y',        OFFSET_Y);
+        grp.setAttribute('overflow', 'visible');
+        svg.appendChild(grp);
+
+        // ── create & animate squares ──
+        for (let i = 0; i < NUM_SQ; i++) {
+          const sq = document.createElementNS(NS, 'rect');
+          sq.setAttribute('width',        CELL_W - 1);
+          sq.setAttribute('height',       CELL_H - 1);
+          sq.setAttribute('fill',         'currentColor');
+          sq.setAttribute('stroke-width', '0');
+          sq.style.opacity = '0';
+          grp.appendChild(sq);
+
+          const [cx, cy] = randPos();
+          sq.setAttribute('x', cx * CELL_W + 1);
+          sq.setAttribute('y', cy * CELL_H + 1);
+
+          // Stagger start like the React component's `delay: index * 0.1`
+          setTimeout(() => animateSq(sq, grp), i * 100);
+        }
+      }
+
+      function animateSq(sq, grp) {
+        // Fade in
+        const fadeIn = sq.animate(
+          [{ opacity: 0 }, { opacity: MAX_OP }],
+          { duration: DURATION, fill: 'forwards', easing: 'ease-in-out' }
+        );
+        fadeIn.onfinish = () => {
+          // Fade out (reverse)
+          const fadeOut = sq.animate(
+            [{ opacity: MAX_OP }, { opacity: 0 }],
+            { duration: DURATION, fill: 'forwards', easing: 'ease-in-out' }
+          );
+          fadeOut.onfinish = () => {
+            // Move to new random position then repeat after delay
+            const [nx, ny] = randPos();
+            sq.setAttribute('x', nx * CELL_W + 1);
+            sq.setAttribute('y', ny * CELL_H + 1);
+            setTimeout(() => animateSq(sq, grp), REPEAT_DELAY);
+          };
+        };
+      }
+
+      // ── ResizeObserver mirrors the React component's ResizeObserver ──
+      const ro = new ResizeObserver(entries => {
+        for (const e of entries) {
+          dims = { w: e.contentRect.width, h: e.contentRect.height };
+          if (dims.w > 0 && dims.h > 0) {
+            patternId = 'agp-' + Math.random().toString(36).slice(2, 8);
+            build();
+          }
+        }
+      });
+      ro.observe(svg);
+    })();
+    // ──────────────────────────────────────────────────────────────────────
+  </script>
+</body>
+</html>
