@@ -225,86 +225,64 @@
     .btn-ghost:active { opacity: 0.7; }
     .btn-ghost:focus-visible { outline: 2px solid var(--colorBlurple); outline-offset: 2px; }
 
-    /* ─── Hero Visual / Gradient Blob ─── */
+    /* ─── Hero Visual / Background Boxes ─── */
     .hero-visual {
       aspect-ratio: 4/3;
       border-radius: 18px;
       overflow: hidden;
       position: relative;
-      background: #0e0020;
+      background: #0f172a;
     }
 
-    .blob-canvas {
+    .boxes-grid {
+      position: absolute;
+      left: 25%;
+      top: -25%;
+      padding: 16px;
+      display: flex;
+      transform: translate(-50%, -50%) skewX(-48deg) skewY(14deg) scale(0.675) translateZ(0);
+      z-index: 0;
+      pointer-events: all;
+    }
+
+    .box-row {
+      width: 64px;
+      flex-shrink: 0;
+      position: relative;
+      border-left: 1px solid #334155;
+    }
+
+    .box-cell {
+      width: 64px;
+      height: 32px;
+      border-right: 1px solid #334155;
+      border-top: 1px solid #334155;
+      position: relative;
+      transition: background-color 2s ease;
+    }
+
+    .box-cell:hover {
+      transition: background-color 0s;
+    }
+
+    .box-plus {
+      position: absolute;
+      height: 24px;
+      width: 40px;
+      top: -14px;
+      left: -22px;
+      color: #334155;
+      pointer-events: none;
+    }
+
+    .boxes-overlay {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(52px);
-      mix-blend-mode: screen;
-      will-change: transform;
-    }
-
-    .blob-1 {
-      width: 70%; height: 70%;
-      background: radial-gradient(circle at center, #ff2ede 0%, transparent 65%);
-      top: -20%; left: 0%;
-      animation: b1 9s ease-in-out infinite;
-      opacity: 0.95;
-    }
-
-    .blob-2 {
-      width: 60%; height: 60%;
-      background: radial-gradient(circle at center, #ef6a14 0%, transparent 65%);
-      top: 10%; right: -10%;
-      animation: b2 11s ease-in-out infinite;
-      opacity: 0.9;
-    }
-
-    .blob-3 {
-      width: 55%; height: 55%;
-      background: radial-gradient(circle at center, #ffcb30 0%, transparent 65%);
-      bottom: -10%; left: 10%;
-      animation: b3 10s ease-in-out infinite;
-      opacity: 0.75;
-    }
-
-    .blob-4 {
-      width: 50%; height: 50%;
-      background: radial-gradient(circle at center, #f9e4b0 0%, transparent 65%);
-      top: 30%; left: -5%;
-      animation: b1 13s ease-in-out infinite reverse;
-      opacity: 0.5;
-    }
-
-    .blob-5 {
-      width: 45%; height: 45%;
-      background: radial-gradient(circle at center, #883fff 0%, transparent 65%);
-      bottom: 5%; right: 0%;
-      animation: b2 8s ease-in-out infinite reverse;
-      opacity: 0.7;
-    }
-
-    @keyframes b1 {
-      0%, 100% { transform: translate(0%, 0%) scale(1); }
-      33% { transform: translate(8%, 12%) scale(1.08); }
-      66% { transform: translate(-6%, 4%) scale(0.93); }
-    }
-
-    @keyframes b2 {
-      0%, 100% { transform: translate(0%, 0%) scale(1); }
-      33% { transform: translate(-10%, 6%) scale(1.06); }
-      66% { transform: translate(7%, -9%) scale(1.12); }
-    }
-
-    @keyframes b3 {
-      0%, 100% { transform: translate(0%, 0%) scale(1); }
-      33% { transform: translate(12%, -6%) scale(0.92); }
-      66% { transform: translate(-4%, 10%) scale(1.07); }
+      background: #0f172a;
+      z-index: 20;
+      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, transparent 30%, black 100%);
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, transparent 30%, black 100%);
+      pointer-events: none;
     }
 
     /* ─── SECTION BASE ─── */
@@ -866,12 +844,8 @@
         <a href="#programma" class="btn-ghost">Bekijk programma</a>
       </div>
     </div>
-    <div class="hero-visual fade-in" style="transition-delay:0.1s;">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-      <div class="blob blob-4"></div>
-      <div class="blob blob-5"></div>
+    <div class="hero-visual fade-in" style="transition-delay:0.1s;" id="hero-visual">
+      <div class="boxes-overlay"></div>
     </div>
   </div>
 
@@ -1328,6 +1302,74 @@
 
 
   <script>
+    // ── Background Boxes ──
+    (function buildBoxes() {
+      const visual = document.getElementById('hero-visual');
+      if (!visual) return;
+
+      const colors = [
+        'rgb(125,211,252)',
+        'rgb(249,168,212)',
+        'rgb(134,239,172)',
+        'rgb(253,224,71)',
+        'rgb(252,165,165)',
+        'rgb(216,180,254)',
+        'rgb(147,197,253)',
+        'rgb(165,180,252)',
+        'rgb(196,181,253)',
+      ];
+
+      const ROWS = 120; // horizontal extent
+      const COLS = 80;  // vertical extent
+
+      const grid = document.createElement('div');
+      grid.className = 'boxes-grid';
+
+      const frag = document.createDocumentFragment();
+
+      for (let i = 0; i < ROWS; i++) {
+        const row = document.createElement('div');
+        row.className = 'box-row';
+
+        for (let j = 0; j < COLS; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'box-cell';
+
+          // Plus SVG at even intersections
+          if (j % 2 === 0 && i % 2 === 0) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.classList.add('box-plus');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('stroke', 'currentColor');
+            path.setAttribute('stroke-width', '1');
+            path.setAttribute('d', 'M12 6v12m6-6H6');
+            svg.appendChild(path);
+            cell.appendChild(svg);
+          }
+
+          cell.addEventListener('mouseenter', () => {
+            cell.style.transition = 'background-color 0s';
+            cell.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          });
+          cell.addEventListener('mouseleave', () => {
+            cell.style.transition = 'background-color 2s ease';
+            cell.style.backgroundColor = '';
+          });
+
+          row.appendChild(cell);
+        }
+        frag.appendChild(row);
+      }
+
+      grid.appendChild(frag);
+      // Insert before overlay so overlay stays on top
+      visual.insertBefore(grid, visual.firstChild);
+    })();
+
     // ── FAQ accordion ──
     document.querySelectorAll('.faq-trigger').forEach(btn => {
       btn.addEventListener('click', () => {
