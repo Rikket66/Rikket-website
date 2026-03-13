@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nieuws — Sessions</title>
+  <style>
+    :root {
+      --colorLight: #f9f7f7;
+      --colorOffWhite: #eceaea;
+      --colorWarmGrey: #dbd7d7;
+      --colorDark: #20033c;
+      --colorPink: #ff2ede;
+      --colorBlue: #3760f1;
+      --colorOrange: #ef6a14;
+      --colorYellow: #ffcb30;
+      --colorBlurple: #883fff;
+      --colorLightPurple: #d298ff;
+      --ease: cubic-bezier(0.45, 0.02, 0.09, 0.98);
+      --easeOut: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: var(--colorDark);
+      background-color: var(--colorLight);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      background: rgba(249, 247, 247, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--colorWarmGrey);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--colorDark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo svg { display: block; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--colorDark);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.18s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a.active { opacity: 1; font-weight: 600; }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 18px;
+      background: var(--colorDark);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: opacity 0.18s;
+    }
+
+    .btn-nav:hover { opacity: 0.82; }
+    .btn-nav:active { opacity: 0.7; }
+    .btn-nav:focus-visible { outline: 2px solid var(--colorBlurple); outline-offset: 2px; }
+
+    /* ─── PAGE WRAPPER ─── */
+    .page {
+      max-width: 1696px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* ─── HERO ─── */
+    .news-hero {
+      padding-top: 160px;
+      padding-bottom: 72px;
+      border-bottom: 1px solid var(--colorWarmGrey);
+    }
+
+    .news-hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.4;
+      margin-bottom: 16px;
+    }
+
+    .news-hero-title {
+      font-size: clamp(40px, 5vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.04;
+      margin: 0 0 20px;
+    }
+
+    .news-hero-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      opacity: 0.6;
+      max-width: 520px;
+      margin: 0;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1.5px solid var(--colorWarmGrey);
+      background: transparent;
+      color: var(--colorDark);
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: -0.01em;
+      transition: border-color 0.18s, background 0.18s, color 0.18s;
+    }
+
+    .filter-btn:hover { border-color: var(--colorDark); }
+    .filter-btn.active {
+      background: var(--colorDark);
+      border-color: var(--colorDark);
+      color: white;
+    }
+    .filter-btn:focus-visible { outline: 2px solid var(--colorBlurple); outline-offset: 2px; }
+
+    /* ─── NEWS GRID ─── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-bottom: 96px;
+    }
+
+    /* ─── NEWS CARD ─── */
+    .news-card {
+      border: 1.5px solid var(--colorWarmGrey);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: var(--colorDark);
+      transition: box-shadow 0.2s, transform 0.2s var(--easeOut);
+      background: var(--colorLight);
+    }
+
+    .news-card:hover {
+      box-shadow: 0 8px 32px rgba(32, 3, 60, 0.09), 0 2px 8px rgba(32, 3, 60, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .news-card:active { transform: translateY(0); }
+    .news-card:focus-visible { outline: 2px solid var(--colorBlurple); outline-offset: 2px; }
+
+    .news-card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: var(--colorOffWhite);
+    }
+
+    .news-card-body {
+      padding: 24px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 12px;
+    }
+
+    .news-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+
+    .badge-blurple { background: rgba(136,63,255,0.1); color: var(--colorBlurple); }
+    .badge-orange  { background: rgba(239,106,20,0.1);  color: var(--colorOrange); }
+    .badge-blue    { background: rgba(55,96,241,0.1);   color: var(--colorBlue); }
+    .badge-pink    { background: rgba(255,46,222,0.1);  color: var(--colorPink); }
+
+    .news-card-title {
+      font-size: 18px;
+      font-weight: 750;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .news-card-excerpt {
+      font-size: 14px;
+      line-height: 1.65;
+      opacity: 0.62;
+      margin: 0;
+      flex: 1;
+    }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      opacity: 0.45;
+      padding-top: 12px;
+      border-top: 1px solid var(--colorWarmGrey);
+      margin-top: auto;
+    }
+
+    .news-card-meta-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ─── FEATURED CARD (first card, spans 2 cols) ─── */
+    .news-card.featured {
+      grid-column: span 2;
+      flex-direction: row;
+    }
+
+    .news-card.featured .news-card-image {
+      width: 52%;
+      aspect-ratio: auto;
+      flex-shrink: 0;
+      border-radius: 0;
+    }
+
+    .news-card.featured .news-card-body {
+      padding: 32px;
+      justify-content: center;
+    }
+
+    .news-card.featured .news-card-title {
+      font-size: 24px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--colorWarmGrey);
+      padding: 32px 48px;
+      max-width: 1696px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-size: 15px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      color: var(--colorDark);
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--colorDark);
+      opacity: 0.45;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .footer-links a:hover { opacity: 0.8; }
+
+    .footer-copy {
+      font-size: 13px;
+      opacity: 0.4;
+    }
+
+    /* ─── FADE IN ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--easeOut), transform 0.7s var(--easeOut);
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      nav { padding: 0 24px; }
+      .page { padding: 0 24px; }
+      footer { padding: 24px; flex-wrap: wrap; }
+      .news-grid { grid-template-columns: repeat(2, 1fr); }
+      .news-card.featured { grid-column: span 2; flex-direction: column; }
+      .news-card.featured .news-card-image { width: 100%; aspect-ratio: 16/9; }
+    }
+
+    @media (max-width: 600px) {
+      .news-grid { grid-template-columns: 1fr; }
+      .news-card.featured { grid-column: span 1; }
+      .news-hero { padding-top: 112px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="10.25" stroke="#20033c" stroke-width="1.5"/>
+        <path d="M6 11h10M11 6v10" stroke="#20033c" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="11" cy="11" r="3" fill="#20033c"/>
+      </svg>
+      Sessions
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#programma">Programma</a></li>
+      <li><a href="index.html#sprekers">Sprekers</a></li>
+      <li><a href="index.html#passen">Passen</a></li>
+      <li><a href="index.html#sponsors">Sponsors</a></li>
+      <li><a href="index.html#faq">FAQ</a></li>
+      <li><a href="nieuws.html" class="active">Nieuws</a></li>
+      <li><a href="index.html#passen" class="btn-nav">Registreer nu</a></li>
+    </ul>
+  </nav>
+
+
+  <div class="page">
+
+    <!-- ═══ HERO ═══ -->
+    <div class="news-hero fade-in">
+      <div class="news-hero-label">Laatste updates</div>
+      <h1 class="news-hero-title">Nieuws</h1>
+      <p class="news-hero-sub">Volg het laatste nieuws over sprekers, partners en alles rondom de interneteconomie conferentie.</p>
+    </div>
+
+    <!-- ═══ FILTER BAR ═══ -->
+    <div class="filter-bar fade-in" style="transition-delay:0.05s;">
+      <button class="filter-btn active">Alles</button>
+      <button class="filter-btn">Sprekers</button>
+      <button class="filter-btn">Programma</button>
+      <button class="filter-btn">Sponsors</button>
+      <button class="filter-btn">Industrie</button>
+    </div>
+
+    <!-- ═══ NEWS GRID ═══ -->
+    <div class="news-grid fade-in" style="transition-delay:0.1s;">
+
+      <!-- Featured article -->
+      <a href="#" class="news-card featured">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x500/20033c/d298ff?text=Sessions+2025"
+          alt="Sessions 2025 aankondiging"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-blurple">Aankondiging</span>
+          <h2 class="news-card-title">Volledig programma Sessions 2025 nu online — 40 sprekers bevestigd</h2>
+          <p class="news-card-excerpt">Het complete tweedaagse programma voor de interneteconomie conferentie is bekendgemaakt. Van keynotes over AI tot workshops rondom internationale groei — dit zijn de highlights die u niet mag missen.</p>
+          <div class="news-card-meta">
+            <span>12 maart 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>4 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="#" class="news-card">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x450/883fff/ffffff?text=Spreker"
+          alt="Nieuwe spreker bevestigd"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-blurple">Sprekers</span>
+          <h2 class="news-card-title">Dr. Eva Smit sluit af met keynote over AGI en bedrijfsmodellen</h2>
+          <p class="news-card-excerpt">De Universiteit van Amsterdam bevestigt de deelname van AI-onderzoeker dr. Eva Smit als closing keynote speaker op dag 2.</p>
+          <div class="news-card-meta">
+            <span>10 maart 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>2 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="#" class="news-card">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x450/ef6a14/ffffff?text=Sponsor"
+          alt="Stripe als hoofdsponsor"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-orange">Sponsors</span>
+          <h2 class="news-card-title">Stripe bevestigd als hoofdsponsor van Sessions 2025</h2>
+          <p class="news-card-excerpt">Betalingsinfrastructuurleider Stripe stapt aan boord als platinum sponsor en organiseert een exclusieve breakout-sessie over de toekomst van online betalingen in Europa.</p>
+          <div class="news-card-meta">
+            <span>7 maart 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>3 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="#" class="news-card">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x450/3760f1/ffffff?text=Programma"
+          alt="Workshop AI toegevoegd"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-blue">Programma</span>
+          <h2 class="news-card-title">Nieuwe workshop: van nul naar €10M ARR in 18 maanden</h2>
+          <p class="news-card-excerpt">Sophie Maas van Sendcloud deelt voor het eerst publiekelijk de volledige groeistrategie waarmee Sendcloud in anderhalf jaar naar €10M ARR sprong.</p>
+          <div class="news-card-meta">
+            <span>4 maart 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>3 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="#" class="news-card">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x450/ff2ede/20033c?text=Industrie"
+          alt="Interneteconomie rapport"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-pink">Industrie</span>
+          <h2 class="news-card-title">Rapport: Nederlandse interneteconomie groeit naar €42 miljard in 2025</h2>
+          <p class="news-card-excerpt">Thuiswinkel.org publiceert zijn jaarlijkse marktrapport. De online economie groeit met 11% ten opzichte van vorig jaar, gedreven door cross-border e-commerce en SaaS.</p>
+          <div class="news-card-meta">
+            <span>28 februari 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>5 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 6 -->
+      <a href="#" class="news-card">
+        <img
+          class="news-card-image"
+          src="https://placehold.co/800x450/ffcb30/20033c?text=Early+Bird"
+          alt="Early bird tickets"
+          loading="lazy"
+        />
+        <div class="news-card-body">
+          <span class="news-badge badge-orange">Tickets</span>
+          <h2 class="news-card-title">Early bird-tickets zijn op — regular sale nu open</h2>
+          <p class="news-card-excerpt">De early bird-fase is met 600 tickets volledig uitverkocht. Vanaf vandaag zijn regular-tickets beschikbaar. Team- en corporate-passen zijn nog beperkt verkrijgbaar.</p>
+          <div class="news-card-meta">
+            <span>20 februari 2026</span>
+            <span class="news-card-meta-dot"></span>
+            <span>2 min lezen</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+  </div><!-- /page -->
+
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <a href="index.html" class="footer-logo">Sessions</a>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Voorwaarden</a>
+      <a href="#">Contact</a>
+      <a href="#">Pers</a>
+    </div>
+    <span class="footer-copy">© 2025 Sessions. Alle rechten voorbehouden.</span>
+  </footer>
+
+
+  <script>
+    // ── Fade-in on scroll ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px 9999px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ── Filter buttons (UI only — no actual filtering) ──
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
